@@ -1,11 +1,5 @@
 import styled from 'styled-components';
 
-// export const FilterLabel = styled.label`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-// `;
-
 export const Text = styled.p`
   font-weight: 600;
   margin-bottom: 5px;

@@ -47,20 +47,19 @@ export class App extends Component {
     return (
       <div
         style={{
-          height: '100vh',
+          // height: '100vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           fontSize: 40,
           color: '#010101',
-          gap: 20,
+          // gap: 20,
         }}
       >
         <h1>Phonebook</h1>
-
         <ContactForm onSubmit={this.formSubmit} />
-
+        <h2>Contacts</h2>
         <Filter value={this.state.filter} onChange={this.filterList} />
         <ContactList
           contacts={this.getFilteredContacts()}

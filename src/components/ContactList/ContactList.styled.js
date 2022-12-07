@@ -20,6 +20,9 @@ export const ContactListLi = styled.li`
 export const BtnDelete = styled.button`
   margin-left: 18px;
   font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffffff;
   cursor: pointer;
   box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.75);
   transition: transform 500ms;
