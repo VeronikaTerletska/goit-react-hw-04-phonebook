@@ -4,11 +4,11 @@ export const Form = styled.form`
   margin-bottom: 50px;
 `;
 
-// export const Label = styled.label`
-//   display: flex;
-//   flex-direction: column;
-//   margin-bottom: 20px;
-// `;
+export const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
 export const Text = styled.p`
   font-weight: 600;
   margin-bottom: 5px;

@@ -1,35 +1,30 @@
 import styled from 'styled-components';
 
-export const ContactList = styled.ul`
-  list-style: none;
-  margin-top: 20px;
-  margin: 0 auto;
-`;
-export const ContactCard = styled.li`
+export const ContactListUl = styled.ul`
+  font-size: 24px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+`;
+export const ContactListLi = styled.li`
+  display: flex;
+
   align-items: center;
   justify-content: space-between;
-  :not(:last-child) {
-    margin-bottom: 10px;
-  }
+
+  list-style-position: inside;
+  width: 450px;
+  padding: 20px;
 `;
-// export const Name = styled.span`
-//   font-weight: 600;
-//   margin-right: 10px;
-// `;
-// export const Number = styled.span`
-//   font-weight: 700;
-// `;
-export const DeleteBtn = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  border-radius: 4px;
-  height: 30px;
-  padding: 10px;
-  border: none;
-  background-color: #4b4b4b;
-  color: white;
+export const BtnDelete = styled.button`
+  margin-left: 18px;
+  font-size: 18px;
   cursor: pointer;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.75);
+  transition: transform 500ms;
+  &:hover {
+    cursor: pointer;
+    background-color: red;
+  }
 `;
