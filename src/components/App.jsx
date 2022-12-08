@@ -17,33 +17,48 @@ export class App extends Component {
     filter: '',
   };
 
-  formSubmit = ({ name, number }) => {
-    const contact = { id: nanoid(), name, number };
-    if (this.state.contacts.some(e => e.name === name)) {
-      return alert(`${name} is already in contacts!`);
+  addContact = ({ name, number }) => {
+    const { contacts } = this.state;
+
+    const hasName = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (hasName) {
+      alert(`${name} is alredy in contacts`);
+      return;
     }
 
-    this.setState(({ contacts }) => ({ contacts: [contact, ...contacts] }));
-  };
-
-  getFilteredContacts = () => {
-    const { contacts, filter } = this.state;
-    const filterContactsList = contacts.filter(contact => {
-      return contact.name.toLowerCase().includes(filter.toLowerCase());
-    });
-    return filterContactsList;
-  };
-
-  filterList = evt => {
-    const { name, value } = evt.target;
-    this.setState({ [name]: value });
-  };
-  deleteContact = contactId => {
+    const newContact = { name: name, id: nanoid(), number: number };
     this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+      contacts: [newContact, ...prevState.contacts],
+    }));
+  };
+
+  handleChangeFilter = event => {
+    const { value } = event.currentTarget;
+    this.setState({ filter: value });
+  };
+
+  getVisibelContats = () => {
+    const { contacts, filter } = this.state;
+
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  deleteContact = idContact => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(({ id }) => id !== idContact),
     }));
   };
   render() {
+    const { filter } = this.state;
+    const visibleContacts = this.getVisibelContats();
+
     return (
       <div
         style={{
@@ -58,12 +73,12 @@ export class App extends Component {
         }}
       >
         <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.formSubmit} />
+        <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        <Filter value={this.state.filter} onChange={this.filterList} />
+        <Filter value={filter} onChange={this.handleChangeFilter} />
         <ContactList
-          contacts={this.getFilteredContacts()}
-          deleteContact={this.deleteContact}
+          contacts={visibleContacts}
+          onDeleteContact={this.deleteContact}
         />
         <GlobalStyle />
       </div>

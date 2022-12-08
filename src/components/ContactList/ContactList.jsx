@@ -1,26 +1,32 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import { ContactListUl, ContactListLi, BtnDelete } from './ContactList.styled';
+// import React from 'react';
+import PropTypes from 'prop-types';
+import { ContactItem } from 'components/ContactItem/ContactItem';
+import { List } from './ContactList.styled';
 
-export const ContactList = ({ contacts, deleteContact }) => (
-  <ContactListUl>
-    {contacts.map((contact, id) => (
-      <ContactListLi key={id}>
-        {contact.name}: {contact.number}
-        <BtnDelete type="button" onClick={() => deleteContact(contact.id)}>
-          Delete
-        </BtnDelete>
-      </ContactListLi>
-    ))}
-  </ContactListUl>
-);
+export const ContactList = ({ contacts, onDeleteContact }) => {
+  return (
+    <List>
+      {contacts.map(({ name, id, number }) => {
+        return (
+          <ContactItem
+            key={id}
+            id={id}
+            name={name}
+            number={number}
+            onDeleteContact={() => onDeleteContact(id)}
+          />
+        );
+      })}
+    </List>
+  );
+};
 ContactList.propTypes = {
-  deleteContact: propTypes.func.isRequired,
-  contacts: propTypes.arrayOf(
-    propTypes.exact({
-      id: propTypes.string.isRequired,
-      name: propTypes.string.isRequired,
-      number: propTypes.string.isRequired,
+  contacts: PropTypes.arrayOf(
+    PropTypes.exact({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
     })
-  ),
+  ).isRequired,
+  onDeleteContact: PropTypes.func.isRequired,
 };
