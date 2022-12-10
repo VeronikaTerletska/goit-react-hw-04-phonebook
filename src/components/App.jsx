@@ -17,24 +17,6 @@ export class App extends Component {
     filter: '',
   };
 
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-
-    if (parsedContacts !== null) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-
-  componentDidUpdate(_, prevState) {
-    const prevContacts = prevState.contacts;
-    const nextContacts = this.state.contacts;
-
-    if (prevContacts.length !== nextContacts.length) {
-      localStorage.setItem('contacts', JSON.stringify(nextContacts));
-    }
-  }
-
   addContact = ({ name, number }) => {
     const { contacts } = this.state;
 
@@ -73,6 +55,25 @@ export class App extends Component {
       contacts: prevState.contacts.filter(({ id }) => id !== idContact),
     }));
   };
+
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts !== null) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    const prevContacts = prevState.contacts;
+    const nextContacts = this.state.contacts;
+
+    if (prevContacts.length !== nextContacts.length) {
+      localStorage.setItem('contacts', JSON.stringify(nextContacts));
+    }
+  }
+
   render() {
     const { filter } = this.state;
     const visibleContacts = this.getVisibelContats();
