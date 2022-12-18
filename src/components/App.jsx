@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { nanoid } from 'nanoid';
 
 import { ContactForm } from './ContactForm/ContactForm';
@@ -6,101 +6,82 @@ import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 import { GlobalStyle } from './GlobalStyle';
 
-export class App extends Component {
-  state = {
-    contacts: [
+export function App() {
+  const [contacts, setContacts] = useState(() => {
+    const saveContacts = localStorage.getItem('contacts');
+    if (saveContacts !== null) {
+      const parseContacts = JSON.parse(saveContacts);
+      return parseContacts;
+    }
+    return [
       { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
       { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
-    filter: '',
-  };
+    ];
+  });
+  const [filter, setFilter] = useState('');
 
-  addContact = ({ name, number }) => {
-    const { contacts } = this.state;
+  useEffect(() => {
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
+
+  const addContact = ({ name, number }) => {
+    console.log({ name, number });
 
     const hasName = contacts.some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
 
     if (hasName) {
-      alert(`${name} is alredy in contacts`);
-      return;
+      return alert(`${name} is alredy in contacts`);
     }
 
-    const newContact = { name: name, id: nanoid(), number: number };
-    this.setState(prevState => ({
-      contacts: [newContact, ...prevState.contacts],
-    }));
+    const newContact = { id: nanoid(), name: name, number: number };
+
+    setContacts(prevContacts => [newContact, ...prevContacts]);
   };
 
-  handleChangeFilter = event => {
-    const { value } = event.currentTarget;
-    this.setState({ filter: value });
+  const handleChangeFilter = evt => {
+    const { value } = evt.currentTarget;
+    setFilter(value);
   };
 
-  getVisibelContats = () => {
-    const { contacts, filter } = this.state;
-
-    const normalizedFilter = filter.toLowerCase();
+  const getVisibelContats = () => {
+    const normalizedFilter = filter.toLowerCase().trim();
 
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(normalizedFilter)
     );
   };
 
-  deleteContact = idContact => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(({ id }) => id !== idContact),
-    }));
+  const deleteContact = idContact => {
+    setContacts(prevContacts =>
+      prevContacts.filter(({ id }) => id !== idContact)
+    );
   };
 
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
+  const visibleContacts = getVisibelContats();
 
-    if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
-    }
-  }
-
-  componentDidUpdate(_, prevState) {
-    const prevContacts = prevState.contacts;
-    const nextContacts = this.state.contacts;
-
-    if (prevContacts !== nextContacts) {
-      localStorage.setItem('contacts', JSON.stringify(nextContacts));
-    }
-  }
-
-  render() {
-    const { filter } = this.state;
-    const visibleContacts = this.getVisibelContats();
-
-    return (
-      <div
-        style={{
-          // height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: 40,
-          color: '#010101',
-          // gap: 20,
-        }}
-      >
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.addContact} />
-        <h2>Contacts</h2>
-        <Filter value={filter} onChange={this.handleChangeFilter} />
-        <ContactList
-          contacts={visibleContacts}
-          onDeleteContact={this.deleteContact}
-        />
-        <GlobalStyle />
-      </div>
-    );
-  }
+  return (
+    <div
+      style={{
+        // height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: 40,
+        color: '#010101',
+        // gap: 20,
+      }}
+    >
+      <h1>Phonebook</h1>
+      <ContactForm onSubmit={addContact} />
+      <h2>Contacts</h2>
+      <Filter value={filter} onChange={handleChangeFilter} />
+      <ContactList contacts={visibleContacts} onDeleteContact={deleteContact} />
+      <GlobalStyle />
+    </div>
+  );
 }
